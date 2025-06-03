@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #config system
     'rest_framework',
+    'core',
 ]
 
 REST_FRAMEWORK = {
