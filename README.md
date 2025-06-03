@@ -13,8 +13,8 @@ API REST del sistema Sparta Gym desarrollada con Django y Django REST Framework 
 Clona el repositorio:
 
 ```bash
-git clone https://github.com/tu-usuario/sparta_gym_api.git
-cd sparta_gym_api
+git clone https://github.com/hugoberra/sparta-gym-project-test
+cd sparta-gym-project-test
 ```
 
 Crear y activar entorno virtual:
