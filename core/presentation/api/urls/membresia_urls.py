@@ -7,6 +7,7 @@ from core.presentation.api.views.membresia_views import (
 
 urlpatterns = [
     path('membresias/', MembresiaView.as_view()),
+    path('membresias/<int:pk>/', MembresiaView.as_view()),
     path('membresias/renovar/', RenovarMembresiaView.as_view()),
     path('membresias/promocion/', AplicarPromocionView.as_view()),
 ]

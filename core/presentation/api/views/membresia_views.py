@@ -8,33 +8,59 @@ from datetime import timedelta
 class MembresiaView(APIView):
 
     def get(self, request):
-        return Response("Listo")  # Ambigua
+        try:
+            membresias = Membresia.objects.all()
+            data = MembresiaSerializer(membresias, many=True).data # Sí hay registros
+            
+            if not data:
+                return Response({"mensaje": "No hay membresias registradas"})
+            
+            return Response({"registros": data})
+        
+        except Membresia.DoesNotExist:
+            return Response({"mensaje": "No hay membresias registradas"}) # No hay registros
 
     def post(self, request):
         data = request.data
         serializer = MembresiaSerializer(data=data)
-        if serializer.is_valid():
+        
+        if not serializer.is_valid():
+            return Response({
+                "mensaje": "Error al registrar membresía", 
+                "errores": serializer.errors})
+        
+        serializer.save()
+        return Response("Inscripción aceptada")  # Ambigua
+
+    def put(self, request, pk):
+        try:
+            membresia = Membresia.objects.get(id=pk)
+            serializer = MembresiaSerializer(membresia, data=request.data)
+            if not serializer.is_valid():
+                return Response({
+                    "mensaje": "Error al actualizar membresía", 
+                    "errores": serializer.errors
+                })
+        
             serializer.save()
-            return Response("Inscripción aceptada")  # Ambigua
-        return Response("Falló algo")
+            return Response({
+                'mensaje': 'Membresía actualizada correctamente',
+                'Registro':serializer.data})
+        
+        except Membresia.DoesNotExist:
+            return Response({"mensaje": "Membresía no encontrada"})
 
-    def put(self, request):
+    def delete(self, request, pk):
         try:
-            id = request.data.get("id")
-            obj = Membresia.objects.get(id=id)
-            obj.activa = not obj.activa
-            obj.save()
-            return Response("Cambiado")
-        except:
-            return Response("Algo no salió bien")
-
-    def delete(self, request):
-        try:
-            obj = Membresia.objects.get(id=request.data.get("id"))
+            obj = Membresia.objects.get(id=pk)
             obj.delete()
-            return Response("Bye")
-        except:
-            return Response("No eliminado")
+            return Response({
+                "id": pk,
+                "tipo": obj.tipo,
+                "mensaje": "Membresia eliminada"
+                })
+        except Membresia.DoesNotExist:
+            return Response({"mensaje": "Membresía no encontrada"})
 
 class RenovarMembresiaView(APIView):
     def post(self, request):
