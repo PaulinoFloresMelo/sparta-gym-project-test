@@ -63,15 +63,23 @@ class MembresiaView(APIView):
             return Response({"mensaje": "Membresía no encontrada"})
 
 class RenovarMembresiaView(APIView):
-    def post(self, request):
+    def put(self, request, pk):
+        
         try:
-            id = request.data.get("id")
-            obj = Membresia.objects.get(id=id)
+            obj = Membresia.objects.get(id=pk)
+            if not obj.fecha_fin or not obj.fecha_inicio:
+                return Response({"mensaje": "Fecha de inicio o fin no establecida"})
+            
             obj.fecha_fin = obj.fecha_fin + timedelta(days=obj.duracion_dias)
             obj.save()
-            return Response("Renovada")
-        except:
-            return Response("Error en renovación")
+            return Response({
+                "id": pk,
+                "tipo": obj.tipo,
+                "mensaje": "Membresía renovada correctamente",})
+        
+        except Membresia.DoesNotExist:
+            return Response({"mensaje": "Membresía no encontrada"})
+
 
 class AplicarPromocionView(APIView):
     def post(self, request):
