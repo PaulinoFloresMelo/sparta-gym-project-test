@@ -1,4 +1,5 @@
 # presentation/api/views/membresia_views.py
+from decimal import Decimal
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from core.infrastructure.persistence.models.membresia import Membresia
@@ -82,13 +83,16 @@ class RenovarMembresiaView(APIView):
 
 
 class AplicarPromocionView(APIView):
-    def post(self, request):
+    def put(self, request, pk):
         try:
-            id = request.data.get("id")
-            obj = Membresia.objects.get(id=id)
+            obj = Membresia.objects.get(id=pk)
             obj.promocion = True
-            obj.precio = obj.precio * 0.85  # Descuento del 15%
+            obj.precio = obj.precio * Decimal(0.85)  # Descuento del 15%
             obj.save()
-            return Response("Con descuento")
-        except:
-            return Response("Error")
+            return Response({
+                "id": pk,
+                "tipo": obj.precio,
+                "mensaje": "Promoción aplicada correctamente",
+                })
+        except Membresia.DoesNotExist:
+            return Response({"mensaje": "Membresía no encontrada"})
