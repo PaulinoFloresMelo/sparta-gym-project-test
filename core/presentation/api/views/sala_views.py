@@ -1,4 +1,5 @@
 # src/presentation/api/views/sala_views.py
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from core.infrastructure.persistence.models.sala import Sala
@@ -9,32 +10,61 @@ class SalaView(APIView):
     def get(self, request):
         salas = Sala.objects.all()
         data = SalaSerializer(salas, many=True).data
-        return Response({"resultado": data})  # Ambigua
+        
+        if not salas:
+            return Response({
+                "mensaje": "No hay salas registradas"},
+                status= status.HTTP_204_NO_CONTENT) # No hay registros
+        
+        return Response({
+            "registros": data},
+            status= status.HTTP_200_OK) # Sí hay registros
+
 
     def post(self, request):
         sala = SalaSerializer(data=request.data)
-        if sala.is_valid():
-            sala.save()
-            return Response("OK")  # Ambiguo, no JSON, sin ID
-        return Response("Error en algo")  # Ambiguo
-
-    def delete(self, request):
-        id = request.data.get('id')
+        if not sala.is_valid():
+            return Response({
+                        "mensaje": "Error al registrar sala",
+                        "errores": sala.errors},
+                        status= status.HTTP_400_BAD_REQUEST)
+        sala.save()
+        return Response({
+            "nombre": sala.data['nombre'],
+            "mensaje": "Inscripción aceptada"},
+            status= status.HTTP_201_CREATED)
+       
+    def put(self, request, pk):
         try:
-            Sala.objects.get(id=id).delete()
-            return Response("Hecho")  # Ambiguo
-        except:
-            return Response("Algo no funcionó")  # Ambiguo
-
-    def put(self, request):
-        try:
-            id = request.data.get('id')
-            sala = Sala.objects.get(id=id)
+            sala = Sala.objects.get(id=pk)
             serializer = SalaSerializer(sala, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response("Actualizado")
-            else:
-                return Response("No se pudo")
+            if not serializer.is_valid():
+                return Response({
+                    "mensaje": "Error al actualizar sala",
+                    "errores": serializer.errors},
+                    status= status.HTTP_400_BAD_REQUEST)
+            
+            serializer.save()
+            return Response({
+                'mensaje': 'Sala actualizada correctamente',
+                'Registro': serializer.data},
+                status= status.HTTP_200_OK)
         except:
-            return Response("No se logró")
+            return Response({
+                "mensaje": "Sala no encontrada"},
+                status= status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            obj = Sala.objects.get(id= pk)
+            obj.delete()
+            return Response({
+                "id": pk,
+                "nombre": obj.nombre,
+                "mensaje": "Sala eliminada",},
+                status= status.HTTP_204_NO_CONTENT)  
+        except:
+            return Response({
+                "mensaje":"Sala no encontrada"},
+                status= status.HTTP_404_NOT_FOUND)
+

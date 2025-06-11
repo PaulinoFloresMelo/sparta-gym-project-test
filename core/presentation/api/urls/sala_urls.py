@@ -4,4 +4,5 @@ from core.presentation.api.views.sala_views import SalaView
 
 urlpatterns = [
     path('salas/', SalaView.as_view()),
+    path('salas/<int:pk>/', SalaView.as_view()),
 ]

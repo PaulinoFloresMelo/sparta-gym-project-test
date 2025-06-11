@@ -22,16 +22,15 @@ class MembresiaView(APIView):
             return Response({"mensaje": "No hay membresias registradas"}) # No hay registros
 
     def post(self, request):
-        data = request.data
-        serializer = MembresiaSerializer(data=data)
-        
-        if not serializer.is_valid():
+        membresia = MembresiaSerializer(data=request.data)
+        if not membresia.is_valid():
             return Response({
                 "mensaje": "Error al registrar membresía", 
-                "errores": serializer.errors})
+                "errores": membresia.errors,
+                })
         
-        serializer.save()
-        return Response("Inscripción aceptada")  # Ambigua
+        membresia.save()
+        return Response("Inscripción aceptada")
 
     def put(self, request, pk):
         try:
