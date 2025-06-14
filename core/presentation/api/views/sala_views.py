@@ -23,17 +23,20 @@ class SalaView(APIView):
 
     def post(self, request):
         sala = SalaSerializer(data=request.data)
+        
         if not sala.is_valid():
             return Response({
                         "mensaje": "Error al registrar sala",
                         "errores": sala.errors},
                         status= status.HTTP_400_BAD_REQUEST)
+        
         sala.save()
         return Response({
             "nombre": sala.data['nombre'],
-            "mensaje": "Inscripción aceptada"},
+            "mensaje": "Se ha registrado la sala correctamente"},
             status= status.HTTP_201_CREATED)
-       
+
+
     def put(self, request, pk):
         try:
             sala = Sala.objects.get(id=pk)
@@ -49,10 +52,12 @@ class SalaView(APIView):
                 'mensaje': 'Sala actualizada correctamente',
                 'Registro': serializer.data},
                 status= status.HTTP_200_OK)
-        except:
+        
+        except Sala.DoesNotExist:
             return Response({
                 "mensaje": "Sala no encontrada"},
                 status= status.HTTP_404_NOT_FOUND)
+
 
     def delete(self, request, pk):
         try:
@@ -61,8 +66,9 @@ class SalaView(APIView):
             return Response({
                 "id": pk,
                 "nombre": obj.nombre,
-                "mensaje": "Sala eliminada",},
-                status= status.HTTP_204_NO_CONTENT)  
+                "mensaje": "Sala eliminada correctamente"},
+                status= status.HTTP_204_NO_CONTENT)
+        
         except:
             return Response({
                 "mensaje":"Sala no encontrada"},
