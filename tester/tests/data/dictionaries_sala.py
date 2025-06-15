@@ -8,4 +8,3 @@ put_sala_data = {
     "capacidad": "30"
     }
 
-BASE_URL = 'http://127.0.0.1:8000/api'
