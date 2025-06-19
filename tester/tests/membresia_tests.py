@@ -1,46 +1,47 @@
 import pytest
 import requests
-from data import url
 from data import dictionaries_membresia
+from services.status_code import Status
+from config import settings
 
 
 @pytest.mark.critical
 def test_get_all_membresias():
-    response = requests.get( url.BASE_URL + '/membresias/', timeout=1)
-    assert response.status_code == 200
+    response = requests.get( settings.BASE_URL + 'api/membresias/', timeout=1)
+    Status.status_code_ok(response)
 
 
 @pytest.mark.critical
 def test_post_membresia():
     membresia_data = dictionaries_membresia.membresia_data
-    response = requests.post(url.BASE_URL + '/membresias/', json=membresia_data, timeout=1)
-    assert response.status_code == 201
+    response = requests.post(settings.BASE_URL + 'api/membresias/', json=membresia_data, timeout=1)
+    Status.status_code_created(response)
 
 
 @pytest.mark.critical
 def test_put_membresia():
     put_membresia = dictionaries_membresia.put_membresia_data
     # Assuming the mebresia with id exists for update
-    response = requests.put(url.BASE_URL + '/membresias/4/', json=put_membresia, timeout=1)
-    assert response.status_code == 200
+    response = requests.put(settings.BASE_URL + 'api/membresias/9/', json=put_membresia, timeout=1)
+    Status.status_code_ok(response)
 
 
 @pytest.mark.critical
 def test_delete_membresia():
     # Assuming the sala with id exists for deletion
-    response = requests.delete(url.BASE_URL + '/membresias/6/', timeout=1)
-    assert response.status_code == 204
+    response = requests.delete(settings.BASE_URL + 'api/membresias/7/', timeout=1)
+    Status.status_code_delete(response)
 
 
-@pytest.mark.critical
+@pytest.mark.normal
 def test_renovar_membresia():
-    # Assuming the sala with id exists for deletion
-    response = requests.put(url.BASE_URL + '/membresias/renovar/4/', timeout=1)
-    assert response.status_code == 200
+    # Assuming the sala with id exists for renewal
+    response = requests.put(settings.BASE_URL + 'api/membresias/renovar/9/', timeout=1)
+    Status.status_code_ok(response)
 
-@pytest.mark.critical
+
+@pytest.mark.normal
 def test_aplicar_promocion():
-    renovar_membresia = dictionaries_membresia.renovar_membresia_data
-    # Assuming the sala with id exists for deletion
-    response = requests.put(url.BASE_URL + '/membresias/promocion/3/', timeout=1)
-    assert response.status_code == 200
+    # Assuming the sala with id exists for renewal
+    response = requests.put(settings.BASE_URL + 'api/membresias/promocion/9/', timeout=1)
+    Status.status_code_ok(response)
