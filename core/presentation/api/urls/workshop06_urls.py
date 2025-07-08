@@ -10,10 +10,10 @@ from core.presentation.api.views.workshop06_views import (
     )
 
 urlpatterns = [
-    path('workshop06/activity01/', activity_one()),
-    path('workshop06/activity02/', activity_two()),
-    path('workshop06/activity03/', activity_three()),
-    path('workshop06/activity04/', activity_four()),
-    path('workshop06/activity05/', activity_five()),
-    path('workshop06/activity06/', activity_six()),
+    path('workshop06/activity01/', activity_one),
+    path('workshop06/activity02/', activity_two),
+    path('workshop06/activity03/', activity_three),
+    path('workshop06/activity04/', activity_four),
+    path('workshop06/activity05/', activity_five),
+    path('workshop06/activity06/', activity_six),
 ]

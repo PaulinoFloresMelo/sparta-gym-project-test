@@ -2,6 +2,7 @@
 import os
 from lxml import etree
 import json
+from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 # Directory containing the XML files
@@ -156,8 +157,8 @@ def calculate_the_total_by_base_type_of_retencion(path):
     return total_by_base_type_of_retencion
 
 
-@api_view()
-def activity_one():
+@api_view(['POST'])
+def activity_one(request):
     print('Actividad 1: Lectura de archivos XML')
     print('-------------------------------------')
     i = 0
@@ -184,9 +185,11 @@ def activity_one():
         
         except (FileNotFoundError, etree.XMLSyntaxError, Exception ) as e:
             print(f'Error al procesar el archivo {filename}: {str(e)}')
+    
+    return Response({'message': 'revise su consola'})
             
-@api_view()
-def activity_two():
+@api_view(['POST'])
+def activity_two(request):
     print('Actividad 2')
     print('-------------------------------------')
     i= 0
@@ -222,9 +225,11 @@ def activity_two():
 
         except (FileNotFoundError, etree.XMLSyntaxError, Exception ) as e:
             print(f'Error al procesar el archivo {filename}: {str(e)}')
+    
+    return Response({'message': 'revise su consola'})
             
-@api_view()
-def activity_three():
+@api_view(['POST'])
+def activity_three(request):
     print('Actividad 3')
     print('-------------------------------------')
     i= 0
@@ -267,8 +272,10 @@ def activity_three():
     except TypeError as e:
         print(f'Error al serializar el objeto a JSON: {str(e)}')
 
-@api_view()
-def activity_four():
+    return Response({'message': 'se ha creado el archivo activity3.json, revise su directorio'})
+
+@api_view(['POST'])
+def activity_four(request):
     print('Actividad 4')
     print('-------------------------------------')
 
@@ -303,8 +310,10 @@ def activity_four():
     except (FileNotFoundError, etree.XMLSyntaxError, Exception ) as e:
         print(f'Error al procesar el archivo {path}: {str(e)}')
 
-@api_view()
-def activity_five():
+    return Response({'message': 'revise su consola'})
+
+@api_view(['POST'])
+def activity_five(request):
     print('Actividad 5')
     print('-------------------------------------')
     i= 0
@@ -341,9 +350,11 @@ def activity_five():
         write_a_json_file(data=data, name_file='activity5.json')
     except TypeError as e:
         print(f'Error al serializar el objeto a JSON: {str(e)}')
+    
+    return Response({'message': 'se ha creado el archivo activity5.json, revise su directorio'})
 
-@api_view()
-def activity_six():
+@api_view(['POST'])
+def activity_six(request):
     print('Actividad 6')
     print('-------------------------------------')
     i= 0
@@ -424,14 +435,4 @@ def activity_six():
     except TypeError as e:
         print(f'Error al serializar el objeto a JSON: {str(e)}')
 
-# def main():
-#     # activity_one()
-#     # activity_two()
-#     # activity_three()
-#     # activity_four()
-#     activity_five()
-#     # activity_six()
-
-
-# if __name__ == '__main__':
-#     main()
+    return Response({'message': 'se ha creado el archivo cfdis.json, revise su directorio'})

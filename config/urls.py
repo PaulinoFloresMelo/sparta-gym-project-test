@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('core.presentation.api.urls.sala_urls')),
     path('api/', include('core.presentation.api.urls.membresia_urls')),
+    path('api/', include('core.presentation.api.urls.workshop06_urls')),
 
 ]
